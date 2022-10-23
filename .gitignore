@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### add ###
+pull_request_template.md
