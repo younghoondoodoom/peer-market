@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header"></head>
+<style>
+    label {
+        margin: 3px;
+        text-align: center;
+    }
+
+    form {
+        width: 500px;
+        margin: auto !important;
+    }
+
+    input {
+        width: 450px;
+        text-align: center;
+    }
+
+    p {
+        color: red;
+    }
+</style>
+<body>
+<div class="container">
+    <form th:action="@{/member/register}" th:object="${input}" method="post" class="card sign-form p-4 mt-5">
+        <h3 style="text-align: center">회원가입</h3>
+
+        <div class="form-group" style="margin:5px 0 5px 0;">
+            <input type="text" th:field="*{email}" class="form-control" placeholder="이메일을 입력해주세요">
+        </div>
+
+        <div class="form-group" style="margin:5px 0 5px 0;">
+            <input type="text" th:field="*{nickname}" class="form-control" placeholder="이름 입력해주세요">
+        </div>
+
+        <div class="form-group" style="margin:5px 0 5px 0;">
+            <input type="password" name="password" placeholder="비밀번호를 입력해주세요" th:field="*{password}"
+                   class="form-control">
+        </div>
+
+        <div class="form-group" style="margin:5px 0 5px 0;">
+            <input type="password" name="passwordCheck" placeholder="비밀번호를 확인해주세요" th:field="*{passwordCheck}"
+                   class="form-control">
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="회원가입"
+               style='background-color: #21081a; border-color: #21081a; margin:5px 0 5px 0;'/>
+    </form>
+
+</div>
+<!-- /container -->
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
