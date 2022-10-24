@@ -1,9 +1,6 @@
 package doodoom.project.peermarket.validation;
 
 import doodoom.project.peermarket.dto.MemberRegisterInput;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
@@ -15,7 +12,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ValidationTest {
 
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator validator =
+            Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     public void emailValidation() throws Exception {
