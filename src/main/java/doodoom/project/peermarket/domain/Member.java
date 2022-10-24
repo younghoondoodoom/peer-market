@@ -25,4 +25,5 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
+    private Boolean isAdmin;
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header">
+    <titl>로그인</titl>
+</head>
+<style>
+    label {
+        margin: 3px;
+        text-align: center;
+    }
+
+    form {
+        width: 500px;
+        margin: auto !important;
+    }
+
+    input {
+        width: 450px;
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container">
+    <form action="/member/login" method="post" class="card sign-form p-4 mt-5">
+        <h3 style="text-align: center">로그인</h3>
+        <div th:text="${errorMessage != null ? errorMessage : null}" style="text-align: center; color: red"></div>
+        <div class="form-group" style="margin:5px 0 5px 0;">
+            <input type="text" name="username" class="form-control" placeholder="이메일을 입력해주세요" required>
+        </div>
+
+        <div class="form-group" style="margin:5px 0 5px 0;">
+            <input type="password" name="password" placeholder="비밀번호를 입력해주세요" class="form-control" required>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="로그인"
+               style='background-color: #21081a; border-color: #21081a; margin:5px 0 5px 0;'/>
+    </form>
+
+</div>
+<!-- /container -->
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
