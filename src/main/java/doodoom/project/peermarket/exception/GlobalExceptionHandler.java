@@ -1,10 +1,8 @@
 package doodoom.project.peermarket.exception;
 
 import doodoom.project.peermarket.dto.ErrorResponse;
-import doodoom.project.peermarket.type.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,31 +18,33 @@ import static doodoom.project.peermarket.type.ErrorCode.INPUT_FIELD_ERROR;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MemberException.class)
-    public ResponseEntity<?> handleMemberException(MemberException e) {
+    public String handleMemberException(MemberException e, Model model) {
         log.warn("{} is occurred", e.getErrorCode());
-        ErrorResponse response = ErrorResponse.builder()
+        ErrorResponse errorResponse = ErrorResponse.builder()
                 .errorCode(e.getErrorCode())
                 .errorMessage(e.getErrorMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        model.addAttribute("errorResponse", errorResponse);
+        return "error/400";
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<?> handleBindException(BindException e) {
+    public String handleBindException(BindException e, Model model) {
         log.warn("{} is occurred", INPUT_FIELD_ERROR);
-        List<ErrorResponse> responses = new ArrayList<>();
+        List<ErrorResponse> errorResponses = new ArrayList<>();
         for (FieldError error : e.getFieldErrors()) {
-            responses.add(ErrorResponse.builder()
+            errorResponses.add(ErrorResponse.builder()
                     .errorCode(INPUT_FIELD_ERROR)
                     .errorMessage(error.getDefaultMessage())
                     .build());
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responses);
+        model.addAttribute("errorResponses", errorResponses);
+        return "error/validation";
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e) {
-        log.error("{} is occurred", ErrorCode.INTERNAL_SERVER_ERROR);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+    public String handleException(Exception e) {
+        log.error("{} is occurred", e.getMessage());
+        return "error/500";
     }
 }

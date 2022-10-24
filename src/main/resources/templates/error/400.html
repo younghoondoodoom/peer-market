@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header">
+    <title>Error page</title>
+</head>
+
+<body>
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="text-center">
+        <h1 class="display-1 fw-bold">400</h1>
+        <p class="fs-3" th:text="${errorResponse.errorCode}">BAD REQUEST</p>
+        <p class="lead" th:text="${errorResponse.errorMessage}"></p>
+        <a th:href="@{/member/register}" class="btn btn-primary" style="border-color: black; background-color: black">돌아가기</a>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
