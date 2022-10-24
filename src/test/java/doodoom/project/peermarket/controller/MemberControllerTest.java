@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberController.class)
@@ -58,5 +60,19 @@ class MemberControllerTest {
                 .param("passwordCheck", input.getPasswordCheck())
                 .param("nickname", input.getNickname())
         ).andExpect(status().isFound());
+    }
+
+    @Test
+    public void getRegister() throws Exception {
+        mockMvc.perform(get("/member/register"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getLogin() throws Exception {
+        mockMvc.perform(get("/member/login"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

@@ -12,13 +12,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static doodoom.project.peermarket.type.ErrorCode.EMAIL_ALREADY_EXIST;
+import static doodoom.project.peermarket.type.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -86,5 +87,100 @@ class MemberServiceTest {
                 () -> memberService.register(input));
         assertThat(exception.getErrorCode()).isEqualTo(EMAIL_ALREADY_EXIST);
         assertThat(exception.getErrorMessage()).isEqualTo(EMAIL_ALREADY_EXIST.getDescription());
+    }
+
+    @Test
+    public void loadUserByUsernameFailureUsernameNotFound() {
+        //given
+        given(memberRepository.findByEmail(anyString()))
+                .willReturn(Optional.empty());
+
+        //when
+        //then
+        UsernameNotFoundException exception =
+                assertThrows(UsernameNotFoundException.class,
+                () -> memberService.loadUserByUsername(anyString()));
+        assertThat(exception.getMessage()).isEqualTo(MEMBER_NOT_FOUND.getDescription());
+    }
+
+    @Test
+    public void loadUserByUsernameFailureMemberStopped() {
+        //given
+        Member stoppedMember = Member.builder()
+                .id(1L)
+                .email("test@test.com")
+                .password("test1234")
+                .nickname("test")
+                .isAdmin(false)
+                .status(MemberStatus.STOP)
+                .build();
+
+        given(memberRepository.findByEmail(anyString()))
+                .willReturn(Optional.of(stoppedMember));
+
+        //when
+        //then
+        MemberException exception = assertThrows(MemberException.class,
+                () -> memberService.loadUserByUsername(anyString()));
+        assertThat(exception.getErrorCode()).isEqualTo(MEMBER_ALREADY_STOP);
+        assertThat(exception.getErrorMessage()).isEqualTo(MEMBER_ALREADY_STOP.getDescription());
+    }
+
+    @Test
+    public void loadUserByUsernameSuccessAdmin() {
+        //given
+        Member adminMember = Member.builder()
+                .id(1L)
+                .email("test@test.com")
+                .password("test1234")
+                .nickname("test")
+                .isAdmin(true)
+                .status(MemberStatus.ACTIVE)
+                .build();
+
+        given(memberRepository.findByEmail(anyString()))
+                .willReturn(Optional.of(adminMember));
+
+        //when
+        UserDetails user =
+                memberService.loadUserByUsername(adminMember.getEmail());
+
+        //then
+        assertThat(user.getUsername()).isEqualTo(adminMember.getEmail());
+        assertThat(user.getPassword()).isEqualTo(adminMember.getPassword());
+        assertThat(user.getAuthorities().size()).isEqualTo(2);
+
+        List<? extends GrantedAuthority> authorities =
+                user.getAuthorities().stream().toList();
+        assertThat(authorities.get(0).getAuthority()).isEqualTo("ROLE_ADMIN");
+        assertThat(authorities.get(1).getAuthority()).isEqualTo("ROLE_USER");
+    }
+
+    @Test
+    public void loadUserByUsernameSuccess() {
+        //given
+        Member member = Member.builder()
+                .id(1L)
+                .email("test@test.com")
+                .password("test1234")
+                .nickname("test")
+                .isAdmin(false)
+                .status(MemberStatus.ACTIVE)
+                .build();
+
+        given(memberRepository.findByEmail(anyString()))
+                .willReturn(Optional.of(member));
+
+        //when
+        UserDetails user =
+                memberService.loadUserByUsername(member.getEmail());
+
+        //then
+        assertThat(user.getUsername()).isEqualTo(member.getEmail());
+        assertThat(user.getPassword()).isEqualTo(member.getPassword());
+        assertThat(user.getAuthorities().size()).isEqualTo(1);
+        List<? extends GrantedAuthority> authorities =
+                user.getAuthorities().stream().toList();
+        assertThat(authorities.get(0).getAuthority()).isEqualTo("ROLE_USER");
     }
 }
