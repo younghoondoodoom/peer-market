@@ -99,7 +99,7 @@ class MemberServiceTest {
         //then
         UsernameNotFoundException exception =
                 assertThrows(UsernameNotFoundException.class,
-                () -> memberService.loadUserByUsername(anyString()));
+                        () -> memberService.loadUserByUsername(anyString()));
         assertThat(exception.getMessage()).isEqualTo(MEMBER_NOT_FOUND.getDescription());
     }
 
@@ -151,7 +151,7 @@ class MemberServiceTest {
         assertThat(user.getAuthorities().size()).isEqualTo(2);
 
         List<? extends GrantedAuthority> authorities =
-                user.getAuthorities().stream().toList();
+                new ArrayList<>(user.getAuthorities());
         assertThat(authorities.get(0).getAuthority()).isEqualTo("ROLE_ADMIN");
         assertThat(authorities.get(1).getAuthority()).isEqualTo("ROLE_USER");
     }
@@ -180,7 +180,7 @@ class MemberServiceTest {
         assertThat(user.getPassword()).isEqualTo(member.getPassword());
         assertThat(user.getAuthorities().size()).isEqualTo(1);
         List<? extends GrantedAuthority> authorities =
-                user.getAuthorities().stream().toList();
+                new ArrayList<>(user.getAuthorities());
         assertThat(authorities.get(0).getAuthority()).isEqualTo("ROLE_USER");
     }
 }

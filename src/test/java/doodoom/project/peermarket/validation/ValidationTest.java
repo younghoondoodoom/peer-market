@@ -16,7 +16,7 @@ public class ValidationTest {
             Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
-    public void emailValidation() throws Exception {
+    public void emailValidation() {
         //given
         MemberRegisterInput input = MemberRegisterInput.builder()
                 .email("test")
@@ -36,7 +36,7 @@ public class ValidationTest {
     }
 
     @Test
-    public void passwordValidation() throws Exception {
+    public void passwordValidation() {
         //given
         MemberRegisterInput input = MemberRegisterInput.builder()
                 .email("test@test.com")
@@ -55,7 +55,7 @@ public class ValidationTest {
     }
 
     @Test
-    public void passwordCheckValidation() throws Exception {
+    public void passwordCheckValidation() {
         //given
         MemberRegisterInput input = MemberRegisterInput.builder()
                 .email("test@test.com")
