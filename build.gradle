@@ -5,16 +5,68 @@ plugins {
     id 'jacoco'
 }
 
+jacocoTestReport {
+    reports {
+        html.enabled true
+        csv.enabled true
+        xml.enabled true
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            "**/*Application*",
+                            "**/*Exception*",
+                            "**/*Dto*",
+                            "**/*Response*",
+                            "**/*Request*",
+                            "**/*Config*",
+                            "**/*Input*",
+                            "**/*Interceptor*"
+                    ])
+                })
+        )
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+            enabled = true
+
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.60
+            }
+
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.60
+            }
+
+            // 커버리지 체크를 제외할 클래스들
+            excludes = [
+                    '**.*Application*',
+                    '**.*Exception*',
+                    '**.*Dto*',
+                    '**.*Response*',
+                    '**.*Request*',
+                    '**.*Config*',
+                    '**.*Input*',
+                    "**.*Interceptor*"
+            ]
+        }
+    }
+}
+
 group = 'doodoom.project'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
-jacocoTestReport {
-    reports {
-        csv.enabled true
-        xml.enabled true
-    }
-}
 
 configurations {
     compileOnly {
