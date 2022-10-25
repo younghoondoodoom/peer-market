@@ -1,7 +1,6 @@
 package doodoom.project.peermarket.configuration;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
@@ -16,13 +15,8 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
-        String msg = "로그인에 실패하였습니다.";
-
-        if (exception instanceof InternalAuthenticationServiceException) {
-            msg = exception.getMessage();
-        }
         setDefaultFailureUrl("/member/login?error=true");
-        request.setAttribute("errorMessage", msg);
+        request.setAttribute("errorMessage", "로그인에 실패하였습니다.");
 
         super.onAuthenticationFailure(request, response, exception);
     }
