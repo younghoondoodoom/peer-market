@@ -2,7 +2,8 @@ package doodoom.project.peermarket.service.member;
 
 import doodoom.project.peermarket.domain.Member;
 import doodoom.project.peermarket.dto.MemberRegisterInput;
-import doodoom.project.peermarket.exception.MemberException;
+import doodoom.project.peermarket.exception.member.EmailAlreadyExistException;
+import doodoom.project.peermarket.exception.member.MemberStatusStopException;
 import doodoom.project.peermarket.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static doodoom.project.peermarket.type.ErrorCode.*;
 import static doodoom.project.peermarket.type.MemberStatus.ACTIVE;
 import static doodoom.project.peermarket.type.MemberStatus.STOP;
 
@@ -33,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public boolean register(MemberRegisterInput input) {
         if (memberRepository.findByEmail(input.getEmail()).isPresent()) {
-            throw new MemberException(EMAIL_ALREADY_EXIST);
+            throw new EmailAlreadyExistException();
         }
         Member member = Member.builder()
                 .email(input.getEmail())
@@ -49,10 +49,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new UsernameNotFoundException(MEMBER_NOT_FOUND.getDescription()));
+                () -> new UsernameNotFoundException("존재하지 않는 이메일입니다."));
 
         if (member.getStatus().equals(STOP)) {
-            throw new MemberException(MEMBER_ALREADY_STOP);
+            throw new MemberStatusStopException();
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();

@@ -10,8 +10,8 @@
     <div class="text-center">
         <h1 class="display-1 fw-bold">400</h1>
         <div th:each="errorResponse : ${errorResponses}">
-            <p class="fs-3" th:text="${errorResponse.errorCode}">VALIDATION ERROR</p>
-            <p class="lead" th:text="${errorResponse.errorMessage}"></p>
+            <p class="fs-3">VALIDATION ERROR</p>
+            <p class="lead" th:text="${errorResponse.getMessage}"></p>
         </div>
         <a th:href="@{/member/register}" class="btn btn-primary" style="border-color: black; background-color: black">돌아가기</a>
     </div>

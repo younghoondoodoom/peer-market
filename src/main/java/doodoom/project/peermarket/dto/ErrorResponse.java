@@ -1,7 +1,7 @@
 package doodoom.project.peermarket.dto;
 
-import doodoom.project.peermarket.type.ErrorCode;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ErrorResponse {
-    private ErrorCode errorCode;
-    private String errorMessage;
+    private HttpStatus httpStatus;
+    private String message;
 }

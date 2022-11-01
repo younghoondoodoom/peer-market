@@ -2,7 +2,8 @@ package doodoom.project.peermarket.service.member;
 
 import doodoom.project.peermarket.domain.Member;
 import doodoom.project.peermarket.dto.MemberRegisterInput;
-import doodoom.project.peermarket.exception.MemberException;
+import doodoom.project.peermarket.exception.member.EmailAlreadyExistException;
+import doodoom.project.peermarket.exception.member.MemberStatusStopException;
 import doodoom.project.peermarket.repository.MemberRepository;
 import doodoom.project.peermarket.type.MemberStatus;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,9 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import static doodoom.project.peermarket.type.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -83,10 +85,8 @@ class MemberServiceTest {
                 .willReturn(Optional.of(member));
 
         //then
-        MemberException exception = assertThrows(MemberException.class,
+        assertThrows(EmailAlreadyExistException.class,
                 () -> memberService.register(input));
-        assertThat(exception.getErrorCode()).isEqualTo(EMAIL_ALREADY_EXIST);
-        assertThat(exception.getErrorMessage()).isEqualTo(EMAIL_ALREADY_EXIST.getDescription());
     }
 
     @Test
@@ -97,10 +97,8 @@ class MemberServiceTest {
 
         //when
         //then
-        UsernameNotFoundException exception =
-                assertThrows(UsernameNotFoundException.class,
-                        () -> memberService.loadUserByUsername(anyString()));
-        assertThat(exception.getMessage()).isEqualTo(MEMBER_NOT_FOUND.getDescription());
+        assertThrows(UsernameNotFoundException.class,
+                () -> memberService.loadUserByUsername(anyString()));
     }
 
     @Test
@@ -120,10 +118,8 @@ class MemberServiceTest {
 
         //when
         //then
-        MemberException exception = assertThrows(MemberException.class,
+        assertThrows(MemberStatusStopException.class,
                 () -> memberService.loadUserByUsername(anyString()));
-        assertThat(exception.getErrorCode()).isEqualTo(MEMBER_ALREADY_STOP);
-        assertThat(exception.getErrorMessage()).isEqualTo(MEMBER_ALREADY_STOP.getDescription());
     }
 
     @Test

@@ -8,9 +8,8 @@
 <body>
 <div class="d-flex align-items-center justify-content-center vh-100">
     <div class="text-center">
-        <h1 class="display-1 fw-bold">400</h1>
-        <p class="fs-3" th:text="${errorResponse.errorCode}">BAD REQUEST</p>
-        <p class="lead" th:text="${errorResponse.errorMessage}"></p>
+        <h1 class="display-1 fw-bold" th:text="${errorResponse.getHttpStatus}">400 BAD_REQUEST</h1>
+        <p class="lead" th:text="${errorResponse.getMessage}"></p>
         <a th:href="@{/member/register}" class="btn btn-primary" style="border-color: black; background-color: black">돌아가기</a>
     </div>
 </div>
