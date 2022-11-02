@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
                 .message(e.getMessage())
                 .build();
         model.addAttribute("errorResponse", errorResponse);
-        return "error/4**";
+        return "error/memberError";
     }
 
     @ExceptionHandler(BindException.class)
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
                 .message(e.getMessage())
                 .build();
         model.addAttribute("errorResponse", errorResponse);
-        return "error/4**";
+        return "error/fileLoadError";
     }
 
     @ExceptionHandler(Exception.class)
