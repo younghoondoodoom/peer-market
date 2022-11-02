@@ -13,5 +13,12 @@ spring :
       hibernate:
         format_sql: true
 
+  servlet:
+    multipart:
+      enabled: true
+      location: /Users/choiyounghoon/Desktop/study/peer-market/src/main/resources/static/files/img
+      max-file-size: 128KB
+      max-request-size: 128KB
+
 logging.level:
   org.hibernate.SQL: debug
