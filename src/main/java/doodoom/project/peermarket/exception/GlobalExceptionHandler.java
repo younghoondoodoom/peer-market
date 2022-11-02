@@ -1,7 +1,10 @@
 package doodoom.project.peermarket.exception;
 
 import doodoom.project.peermarket.dto.ErrorResponse;
+import doodoom.project.peermarket.exception.file.FileLoadException;
 import doodoom.project.peermarket.exception.member.EmailAlreadyExistException;
+import doodoom.project.peermarket.exception.member.MemberNotFoundException;
+import doodoom.project.peermarket.exception.member.MemberStatusStopException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -17,9 +20,9 @@ import java.util.List;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EmailAlreadyExistException.class)
-    public String handleMemberException(EmailAlreadyExistException e, Model model) {
-        log.info("EmailAlreadyExistException is occurred");
+    @ExceptionHandler({EmailAlreadyExistException.class, MemberStatusStopException.class, MemberNotFoundException.class})
+    public String handleMemberException(RuntimeException e, Model model) {
+        log.info("MemberException is occurred");
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .httpStatus(HttpStatus.BAD_REQUEST)
                 .message(e.getMessage())
@@ -40,6 +43,17 @@ public class GlobalExceptionHandler {
         }
         model.addAttribute("errorResponses", errorResponses);
         return "error/validation";
+    }
+
+    @ExceptionHandler(FileLoadException.class)
+    public String handleFileLoadException(FileLoadException e, Model model) {
+        log.info("FileLoadException is occurred");
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage())
+                .build();
+        model.addAttribute("errorResponse", errorResponse);
+        return "error/4**";
     }
 
     @ExceptionHandler(Exception.class)
