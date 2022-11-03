@@ -2,9 +2,6 @@ package doodoom.project.peermarket.core.file;
 
 import doodoom.project.peermarket.exception.file.FileLoadException;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,25 +13,22 @@ import java.nio.charset.StandardCharsets;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
 class DiskFileLoaderTest {
-
-    @Autowired
-    private FileLoader fileLoader;
-    @Value("${spring.servlet.multipart.location}")
-    private String dirPath;
+    private final String dirPath = "/Users/choiyounghoon/Desktop/study/peer-market/src/test/resources/static/img";
+    private final FileLoader fileLoader = new DiskFileLoader(dirPath);
 
     @Test
     public void uploadFailure() {
         //given
+        FileLoader failFileLoader = new DiskFileLoader("anywhere");
         MultipartFile file = new MockMultipartFile("file",
-                "test.txt", "image/jpg",
+                "test.txt", "text/plain",
                 "test file".getBytes(StandardCharsets.UTF_8));
 
         //when
         //then
         assertThrows(FileLoadException.class,
-                () -> fileLoader.upload(file));
+                () -> failFileLoader.upload(file));
     }
 
     @Test
@@ -61,18 +55,14 @@ class DiskFileLoaderTest {
             sb.append(str);
         }
         assertThat(sb.toString()).isEqualTo(content);
+        reader.close();
 
         removeFile(fileName);
     }
 
-    private static void removeFile(String fileName) throws InterruptedException {
-        File file = new File(fileName);
-        for (int i = 0; i < 100; i++) {
-            if (file.delete()) {
-                break;
-            } else {
-                Thread.sleep(1000);
-            }
-        }
+    private void removeFile(String fileName) {
+        File file = new File(dirPath + File.separator + fileName);
+        System.gc();
+        file.delete();
     }
 }
