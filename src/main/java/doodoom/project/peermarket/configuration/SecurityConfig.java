@@ -25,15 +25,10 @@ public class SecurityConfig {
         http.csrf().disable();
 
         http.authorizeRequests()
-                .antMatchers(
-                        "/",
-                        "/member/register"
-                )
-                .permitAll();
+                .antMatchers("/", "/member/register").anonymous()
+                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .anyRequest().authenticated();
 
-        http.authorizeRequests()
-                .antMatchers("/admin/**")
-                .hasAuthority("ROLE_ADMIN");
 
         http.formLogin()
                 .loginPage("/member/login")
@@ -43,8 +38,7 @@ public class SecurityConfig {
         http.logout()
                 .logoutSuccessUrl("/")
                 .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true)
-                .permitAll();
+                .invalidateHttpSession(true);
 
         return http.build();
     }
