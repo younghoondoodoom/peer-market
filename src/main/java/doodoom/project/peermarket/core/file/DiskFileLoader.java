@@ -20,8 +20,11 @@ import java.util.UUID;
 @Component
 public class DiskFileLoader implements FileLoader {
 
-    @Value("${spring.servlet.multipart.location}")
-    private String dirPath;
+    private final String dirPath;
+
+    public DiskFileLoader(@Value("${spring.servlet.multipart.location}") String dirPath) {
+        this.dirPath = dirPath;
+    }
 
     @Override
     public String upload(MultipartFile file) {
