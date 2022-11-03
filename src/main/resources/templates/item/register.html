@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header">
+    <titl>회원가입</titl>
+</head>
+<style>
+    label {
+        margin: 3px;
+        text-align: center;
+    }
+
+    form {
+        width: 500px;
+        margin: auto !important;
+    }
+
+    input {
+        width: 450px;
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container">
+    <form th:action="@{/item/register}" th:object="${input}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">상품명</label>
+            <label>
+                <input th:field="*{name}" class="form-control" placeholder="상품명을 입력하세요.">
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">제품 설명</label>
+            <label>
+                <textarea th:field="*{description}" class="form-control" placeholder="제품에 대해 설명해주세요.">
+                </textarea>
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">가격</label>
+            <label>
+                <input th:field="*{price}" class="form-control" placeholder="가격을 입력하세요">
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">이미지 파일</label>
+            <label>
+                <input type="file" th:field="*{file}" class="form-control">
+            </label>
+        </div>
+        <input class="btn btn-primary" type="submit" value="상품 올리기"
+               style="margin-top: 1rem!important; background-color: #1c1f23; border-color: #1c1f23;">
+    </form>
+</div>
+<!-- /container -->
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
