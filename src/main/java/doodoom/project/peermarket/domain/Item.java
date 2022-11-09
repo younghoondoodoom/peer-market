@@ -31,4 +31,9 @@ public class Item extends BaseTimeEntity {
     private String description;
     private Long price;
     private String imgName;
+
+    public void changeMember(Member member) {
+        this.member = member;
+        member.getItems().add(this);
+    }
 }
