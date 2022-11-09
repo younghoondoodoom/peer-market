@@ -1,4 +1,4 @@
-package doodoom.project.peermarket.repository;
+package doodoom.project.peermarket.repository.member;
 
 import doodoom.project.peermarket.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
