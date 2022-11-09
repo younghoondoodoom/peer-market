@@ -40,3 +40,4 @@ out/
 pull_request_template.md
 /src/test/java/doodoom/project/peermarket/learing/
 src/main/resources/application.yml
+/src/main/generated/
