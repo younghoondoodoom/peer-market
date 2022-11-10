@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+  <title>홈</title>
+</head>
+
+<body>
+<style>
+  .card-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-group > .card {
+    min-width: 20%;
+    max-width: 20%;
+  }
+
+  .active > .page-link, .page-link.active {
+    background-color: #1c1f23;
+    border-color: #1c1f23;
+  }
+
+  a {
+    color: #1c1f23;
+    text-decoration: auto;
+  }
+
+  a:hover {
+    color: #1c1f23;
+  }
+
+</style>
+
+<div th:replace="fragments/bodyHeader :: bodyHeader"></div>
+
+<div class="container">
+
+  <div class="card-group">
+    <div th:each="item : ${items}" class="card">
+      <a th:href="@{/item/{id}(id = ${item.getId})}">
+        <img th:src="'/files/img/' + ${item.getImgName()}" class="card-img-top" alt="상품 사진">
+        <div class="card-body">
+          <h5 th:text="${item.getName()}" class="card-title">상품 이름</h5>
+          <p th:text="${item.getPrice() + '원'}" class="card-text">상품 가격</p>
+          <p class="card-text">
+            <small th:text="${item.getCreatedAt()}"}
+                   class="text-muted"></small>
+          </p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

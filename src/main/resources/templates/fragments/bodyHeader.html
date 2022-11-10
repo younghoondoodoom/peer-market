@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<div class="header" th:fragment="bodyHeader">
+  <style>
+    .btn-group-lg>.btn, .btn-lg {
+      position: absolute;
+      width: 180px;
+      top: 90%;
+      left: 90%;
+      transform: translate(-50%, -50%)
+    }
+
+    .btn-outline-success {
+      --bs-btn-color: #1c1f23;
+      --bs-btn-border-color: #1c1f23;
+      --bs-btn-hover-bg: #1c1f23;
+      --bs-btn-hover-border-color: #1c1f23;
+      --bs-btn-active-bg: #1c1f23;
+      --bs-btn-active-border-color: #1c1f23;
+      --bs-btn-disabled-color: #1c1f23;
+    }
+  </style>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">HOME</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li sec:authorize="isAnonymous()" class="nav-item">
+            <a th:href="@{/member/login}" class="nav-link active" aria-current="page">login</a>
+          </li>
+          <li sec:authorize="isAnonymous()" class="nav-item">
+            <a th:href="@{/member/register}" class="nav-link active" aria-current="page">sign in</a>
+          </li>
+          <li sec:authorize="isAuthenticated()" class="nav-item">
+            <form role="form" th:action="@{/logout}" method="post">
+              <button class="btn btn-outline-danger" type="submit">logout</button>
+            </form>
+          </li>
+          <li sec:authorize="isAuthenticated()" class="nav-item">
+            <a class="nav-link" th:href="@{/item/register}">상품등록</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Disabled</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>
