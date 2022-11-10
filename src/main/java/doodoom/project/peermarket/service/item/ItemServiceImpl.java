@@ -26,6 +26,7 @@ public class ItemServiceImpl implements ItemService {
     private final FileLoader fileLoader;
 
     @Override
+    @Transactional
     public boolean register(ItemRegisterInput input, String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(
             MemberNotFoundException::new);
