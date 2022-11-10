@@ -7,38 +7,26 @@ import static doodoom.project.peermarket.type.MemberStatus.ACTIVE;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import doodoom.project.peermarket.domain.Item;
 import doodoom.project.peermarket.repository.item.CustomItemRepository;
+import doodoom.project.peermarket.repository.support.Querydsl4RepositorySupport;
 import doodoom.project.peermarket.type.ItemStatus;
 import doodoom.project.peermarket.type.MemberStatus;
-import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 
-@RequiredArgsConstructor
-public class ItemRepositoryImpl implements CustomItemRepository {
+public class ItemRepositoryImpl extends Querydsl4RepositorySupport implements CustomItemRepository {
 
-    private final JPAQueryFactory queryFactory;
+    public ItemRepositoryImpl() {
+        super(Item.class);
+    }
 
     @Override
     public Page<Item> findItemsOnSaleAndMemberActive(final Pageable pageable) {
-        List<Item> content = queryFactory
+        return applyPagination(pageable, query -> query
             .selectFrom(item)
             .where(isServiceableItem())
-            .join(item.member, member).fetchJoin()
-            .fetch();
-
-        JPAQuery<Item> countQuery = queryFactory
-            .selectFrom(item)
-            .where(isServiceableItem())
-            .join(item.member, member).fetchJoin();
-
-        return PageableExecutionUtils.getPage(content, pageable,
-            () -> (long) countQuery.fetch().size());
+            .join(item.member, member).fetchJoin());
     }
 
     private Predicate isServiceableItem() {

@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @DataJpaTest
 @Import(QuerydslTestConfig.class)
@@ -55,7 +56,7 @@ public class ItemRepositoryTest {
     @Test
     public void findItemsOnSaleAndMemberActive() {
         //given
-        PageRequest pageRequest = PageRequest.of(0, 3);
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by("name").descending());
 
         //when
         Page<Item> result = itemRepository.findItemsOnSaleAndMemberActive(pageRequest);
@@ -66,7 +67,7 @@ public class ItemRepositoryTest {
         assertThat(result.getTotalPages()).isEqualTo(1);
         assertThat(result.getSize()).isEqualTo(3);
         for (int i = 0; i < 3; i++) {
-            assertThat(result.getContent().get(i)).isEqualTo(items.get(i));
+            assertThat(result.getContent().get(i)).isEqualTo(items.get(items.size() - (i + 1)));
         }
     }
 }
