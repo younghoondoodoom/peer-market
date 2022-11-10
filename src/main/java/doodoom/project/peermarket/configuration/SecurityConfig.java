@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 @Configuration
 public class SecurityConfig {
+
     @Bean
     PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -25,20 +26,22 @@ public class SecurityConfig {
         http.csrf().disable();
 
         http.authorizeRequests()
-                .antMatchers("/", "/member/register").anonymous()
-                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .anyRequest().authenticated();
-
+            .antMatchers("/css/**").permitAll()
+            .antMatchers("/files/**").permitAll()
+            .antMatchers("/", "/member/register").anonymous()
+            .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+            .anyRequest().authenticated();
 
         http.formLogin()
-                .loginPage("/member/login")
-                .failureHandler(getFailureHandler())
-                .permitAll();
+            .loginPage("/member/login")
+            .failureHandler(getFailureHandler())
+            .permitAll();
 
         http.logout()
-                .logoutSuccessUrl("/")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true);
+            .logoutSuccessUrl("/")
+            .deleteCookies("JSESSIONID")
+            .invalidateHttpSession(true)
+            .permitAll();
 
         return http.build();
     }
